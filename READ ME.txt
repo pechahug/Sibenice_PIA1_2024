@@ -1,0 +1,6 @@
+Snaha o napsání hry Hangman
+
+Aktuálně funguje:
+
+Kresba všech 12 variant šibenice (11 životů + počáteční pozice)
+- 	V int main(), musíme změnit hodnotu na 0-11 pro vykreslení 	požadovaného obrázku
