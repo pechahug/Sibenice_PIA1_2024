@@ -136,14 +136,76 @@ void DrawHangman(int GuessCount = 0)
     
 }
 
+void PlayedLetters (string input, char from, char to) 
+{
+    // Tato funkce slouží k vyloučení písmen které jsme odehráli
+    std::string s;
+    
+    for(char i = from; i <=to; i++) 
+    {
+        if(input.find(i) == string::npos) 
+        {
+            s += i;
+            s += " ";
+        }
+        else 
+        {
+            s += "  ";
+        }
+    }
+
+    PrintMessage(s, false, false);
+}
+
+
+void PlayableLetters(string taken)  // Funkce slouží k vykreslení odělovacích částí "available letters a guess the word" + k vykreslení všech nepoužitých písmen
+{
+    PrintMessage("Available letters");
+    PlayedLetters(taken , 'A', 'M'); 
+    PlayedLetters(taken , 'N', 'Z');
+    PrintMessage("Guess the word");
+
+}
+
+bool ChosenWord(string word, string guessed) //Slouží k vykreslení počtu písmen hádaného slova + zobrazuje správně uhodnutá písmena
+{
+
+    bool won = true;
+    std::string n;
+
+    for (int i = 0; i < word.length(); i++) 
+    {
+        if (guessed.find(word[i]) == string::npos) 
+        {
+            won = false;
+            n += "_ ";
+        }
+        else 
+        {
+            n += word[i];
+            n += " ";
+        }
+    }
+    PrintMessage(n, false);
+    return won;
+
+}
 
 int main()
 {
+    std::string guesses = "ABHJIKKLL";
     PrintMessage("HANG MAN");
     DrawHangman(11);
+    PlayableLetters("ALEXA");
+    ChosenWord("ALEXES", guesses);
+    getchar();
+    return 0;
+
+    
 
   
 }
+
 /*
 +---------------------------------+
 |            HANG MAN             |
