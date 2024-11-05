@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
+#include <time.h> //používáme pro vybrání náhodného slova
 using namespace std;
 
 void PrintMessage(std::string message, bool TopEdge = true, bool BottomEdge = true )
@@ -191,13 +193,82 @@ bool ChosenWord(string word, string guessed) //Slouží k vykreslení počtu pí
 
 }
 
+std::string LoadRandomWord(string path) 
+{
+    int LineCount = 0;
+    std::string word;
+    std::vector<string> v;
+    ifstream reader(path);
+    if(reader.is_open()) 
+    {
+        while(std::getline(reader, word)) 
+        {
+            v.push_back(word);
+        }
+        int randomline = rand() % v.size();
+
+        word = v.at(randomline);
+        reader.close();
+
+    }
+    return word;
+}
+
+int TriesLeft(string word, string guessed) 
+{
+    int error = 0;
+    for (int i = 0; i< guessed.length(); i++) 
+    {
+        if (word.find(guessed[i]) == string::npos)
+        error ++;
+    }
+    return error;
+}
+
 int main()
 {
-    std::string guesses = "ABHJIKKLL";
-    PrintMessage("HANG MAN");
-    DrawHangman(11);
-    PlayableLetters("ALEXA");
-    ChosenWord("ALEXES", guesses);
+    std::srand(time(0));
+    std::string guesses;
+    std::string WordToGuess;
+    WordToGuess = LoadRandomWord("Words.txt");
+    cout << WordToGuess << endl << endl;
+    int tries = 0;
+    bool win = false;
+    do 
+    {
+        system("cls");
+        PrintMessage("HANGMAN");
+        DrawHangman(tries);
+        PlayableLetters(guesses);
+        win = ChosenWord(WordToGuess, guesses);
+
+        if (win) 
+        {
+            break;
+        }
+        
+        char x;
+        cout << ">"; cin >>x;
+        if (guesses.find(x) == string::npos) 
+        {
+            guesses += x;
+        }
+
+        tries = TriesLeft(WordToGuess, guesses);
+
+    } while (tries < 11);
+
+    if(win) 
+    {
+        PrintMessage("YOU WON!");
+    }
+    else 
+    {
+        PrintMessage("GAME OVER");
+    }
+
+
+    system("pause");
     getchar();
     return 0;
 
